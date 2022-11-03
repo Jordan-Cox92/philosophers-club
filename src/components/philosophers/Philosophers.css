@@ -1,0 +1,12 @@
+.philosophers {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.philosopher {
+    background-color: rgb(198, 198, 239);
+    border: 1px dotted darkmagenta;
+    padding: 0.7rem;
+    margin: 0.5rem 0;
+}
