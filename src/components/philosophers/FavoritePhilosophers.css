@@ -1,0 +1,17 @@
+.savedPhilosopher {
+    background-color: lavenderblush;
+    border: 1px dotted black;
+    padding: 0.7rem;
+    margin: 0.5rem 0;
+
+}
+
+.comments {
+    color: black;
+    width: 300px;
+    border: 15px solid lightblue;
+    padding: 50px;
+    margin: 20px;
+
+
+}

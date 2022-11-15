@@ -1,12 +1,53 @@
 .philosophers {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
 
 }
 
 .philosopher {
-    background-color: rgb(198, 198, 239);
-    border: 1px dotted darkmagenta;
-    padding: 0.7rem;
+    background-color: lavenderblush;
+    border: 10px dotted black;
+    padding: 0.9rem;
     margin: 0.5rem 0;
+}
+
+.philoCard {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.philoDetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    text-align: center;
+}
+
+h1 {
+    color: skyblue;
+    text-align: center;
+    font-size: xx-large;
+}
+
+h2 {
+    color: skyblue;
+
+}
+
+h3 {
+    color: skyblue;
+
+
+}
+
+button {
+    color: blue;
+}
+
+div {
+    color: white;
+    text-align: center;
+
 }

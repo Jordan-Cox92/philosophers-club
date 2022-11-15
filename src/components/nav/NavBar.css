@@ -1,14 +1,20 @@
 .navbar {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: left;
+
 }
 
 .navbar__item {
     flex-basis: 20%;
     list-style-type: none;
+
 }
 
 .navbar__logout {
     margin-left: auto;
+}
+
+.Navstuff {
+    color: white;
 }

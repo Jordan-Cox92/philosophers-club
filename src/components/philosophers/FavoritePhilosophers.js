@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { CommentForm } from "./commentedFavPhilosophers"
+import "./FavoritePhilosophers.css"
 
 
 
@@ -18,6 +19,15 @@ export const FavoritePhilosophers = () => {
     const philosophyUserObject = JSON.parse(localPhilosophyUser)
 
 
+    //function to grab all of the favorite philosophers
+    const getAllFavoritePhilosophers = () => {
+        fetch(` http://localhost:8088/favoritePhilosophers?_expand=philosopher&userId=${philosophyUserObject.id}`)
+            .then(response => response.json())
+            .then((savedPhilosophersArray) => {
+                setFavPhilo(savedPhilosophersArray)
+            })
+    }
+
     useEffect(
         () => {
             getAllFavoritePhilosophers()
@@ -25,7 +35,7 @@ export const FavoritePhilosophers = () => {
         []
     )
 
-
+    //filter to show me only the favorite philosophers that meet the condition of the userid on the philosopher matching the id of the logged in user.
     useEffect(
         () => {
             const userPhilosophers = favPhilo.filter(philosopher => philosopher.userId === philosophyUserObject.id)
@@ -37,13 +47,6 @@ export const FavoritePhilosophers = () => {
 
 
 
-    const getAllFavoritePhilosophers = () => {
-        fetch(` http://localhost:8088/favoritePhilosophers?_expand=philosopher&userId=${philosophyUserObject.id}`)
-            .then(response => response.json())
-            .then((savedPhilosophersArray) => {
-                setFavPhilo(savedPhilosophersArray)
-            })
-    }
 
     const deleteFavoritePhilosophers = (favoritePhilosopher) => {
         fetch(`http://localhost:8088/favoritePhilosophers/${favoritePhilosopher.id}`, {
@@ -54,7 +57,7 @@ export const FavoritePhilosophers = () => {
             })
 
     }
-
+    //function to get all the comments
     const getAllComments = () => {
         fetch(`  http://localhost:8088/comments`)
             .then(response => response.json())
@@ -62,24 +65,27 @@ export const FavoritePhilosophers = () => {
                 setPhiloComments(commentsArray)
             })
     }
-
+    //invoke getAllComments function 
     useEffect(
         () => {
             getAllComments()
         },
         []
     )
-
+    //function to display the comments of 
     const displayComments = (filteredFavPhilo) => {
 
         const filteredComments = philoComments.filter((comment) =>
             comment.userId === filteredFavPhilo.userId && comment.favoritePhilosopherId === filteredFavPhilo.id
         )
         return filteredComments.map((comment) => {
-            return <li key={comment.id}>{comment.content}
-                <button onClick={() => navigate(`/favoritephilosophers/${comment.id}`)}>Edit Comment</button></li>
+            return <div className="comments" key={comment.id}>{comment.content}
+
+                <button onClick={() => navigate(`/favoritephilosophers/${comment.id}`)}>Edit Comment</button></div>
         })
     }
+
+
 
 
 
@@ -92,17 +98,23 @@ export const FavoritePhilosophers = () => {
 
                 filteredFavPhilos.map(
                     (filteredFavPhilo) => {
-                        return <section key={filteredFavPhilo.id} className="savedPhilosopher">
-                            <header>{filteredFavPhilo.philosopher.name}</header>
-                            <footer> {filteredFavPhilo.philosopher.school}</footer>
+                        return <div key={filteredFavPhilo.id} className="savedPhilosopher">
+                            <h2>{filteredFavPhilo.philosopher.name}</h2>
+                            <h2 className="philoLife">{filteredFavPhilo?.philosopher.Life}</h2>
+                            <h3> {filteredFavPhilo.philosopher.school}</h3>
+                            <div>
+                                <img key={filteredFavPhilo.id} src={filteredFavPhilo.philosopher.imageURL}
+                                    alt="philosopher pics" width="100" height="200" />
+                            </div>
                             {!showcommentForm ? <><button onClick={() => deleteFavoritePhilosophers(filteredFavPhilo)}>Delete Philosopher</button>
                                 <button onClick={() => { setCommentForm(true) }}>Add Comment</button></> : <><CommentForm philosopherId={filteredFavPhilo.id} getAllComments={getAllComments} /></>}
+
 
                             <ul>{displayComments(filteredFavPhilo)}</ul>
 
 
 
-                        </section>
+                        </div>
 
                     }
                 )
@@ -112,3 +124,5 @@ export const FavoritePhilosophers = () => {
 
 
 }
+
+//(see line 102) if the comment form is NOT showing, show delete button and add comment button.  Else, show comment form.
