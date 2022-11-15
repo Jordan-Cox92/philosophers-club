@@ -1,14 +1,30 @@
 import { useEffect, useState } from "react"
+import { Philosopher } from "./Philosopher"
 import "./Philosophers.css"
 
-export const PhilosopherList = () => {
-    //react hook useState used to capture/maintain the state
+export const PhilosopherList = (searchTermState) => {
+    //react hook useState used to capture/manage the state of philosophers, and a function to change the state of philosophers
     const [philosophers, setPhilosophers] = useState([])
     const [filteredPhilosophers, setFiltered] = useState([])
     const [favPhilo, setFavPhilo] = useState([])
 
+
+
+
     const localPhilosophyUser = localStorage.getItem("philosophy_user")
     const philosophyUserObject = JSON.parse(localPhilosophyUser)
+
+    useEffect(
+        () => {
+            const searchedPhilosophers = philosophers.filter(philosopher => {
+                return philosopher.name.toLowerCase().startsWith(searchTermState.toLowerCase())
+            })
+            setFiltered(searchedPhilosophers)
+        },
+        [searchTermState]
+    )
+
+
 
 
 
@@ -21,14 +37,17 @@ export const PhilosopherList = () => {
     }
 
 
-
+    //useEffect to watch state and do something whenever state changes
     useEffect(
-        () => { getAllPhilosophers() },
+        () => {
+            getAllPhilosophers()
+
+        },
         []
     )
 
     const getAllFavoritePhilosophers = () => {
-        fetch(` http://localhost:8088/favoritePhilosophers`)
+        fetch(` http://localhost:8088/favoritePhilosophers?userId=${philosophyUserObject.id}`)
             .then(response => response.json())
             .then((savedPhilosophersArray) => {
                 setFavPhilo(savedPhilosophersArray)
@@ -39,7 +58,7 @@ export const PhilosopherList = () => {
         () => {
             getAllFavoritePhilosophers()
         },
-        []
+        [philosophers]
     )
 
 
@@ -52,13 +71,17 @@ export const PhilosopherList = () => {
             },
             body: JSON.stringify({ "philosopherId": philosopher.id, "userId": philosophyUserObject.id, })//converting object into a string - when sending data to a web server, the data has to be a string
         })
-            .then(response => response.json())
+
             .then(() => {
                 //navigate("/")
                 getAllPhilosophers()
-                window.alert("Your Chosen Philosopher has been Added to Your Favorite Philosophers")
+
+
             })
     }
+
+
+
 
 
 
@@ -73,11 +96,8 @@ export const PhilosopherList = () => {
             {
                 philosophers.map(
                     (philosopher) => {
-                        return <section key={philosopher.id} className="philosopher">
-                            <header>{philosopher.name}</header>
-                            <footer>{philosopher.school}</footer>
-                            <button onClick={() => { savePhilosopher(philosopher) }}>save</button>
-                        </section>
+                        return <Philosopher key={philosopher.id} philosopher={philosopher} savePhilosopher={savePhilosopher} favPhilo={favPhilo} />
+
                     }
                 )
             }

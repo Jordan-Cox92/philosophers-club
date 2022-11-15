@@ -12,7 +12,9 @@ export const EditComments = ({ philosopherId }) => {
     const { commentId } = useParams()
     const [philosopher, setPhilosophers] = useState([])
     const [comment, setComment] = useState({
-        content: ""
+        content: "",
+
+
     })
 
     const localPhilosophyUser = localStorage.getItem("philosophy_user")
